@@ -13,11 +13,11 @@ import {BTCUtils} from "../btc/BTCUtils.sol";
  *         commitment to the state of the L2 chain. Other contracts like the OptimismPortal use
  *         these outputs to verify information about the state of L2.
  */
-contract L2OutputOracle is Semver, BitcoinSPVSimple {
+contract L2OutputOracle is Semver, BitcoinSPV {
     uint256 public immutable L2_BLOCK_TIME;
 
-    uint256 public startingBlockNumber;
-    uint256 public startingTimestamp;
+    uint256 public immutable startingBlockNumber;
+    uint256 public immutable startingTimestamp;
 
     Types.OutputProposal[] internal l2Outputs;
 
@@ -31,15 +31,6 @@ contract L2OutputOracle is Semver, BitcoinSPVSimple {
         require(_l2BlockTime > 0, "L2OutputOracle: L2 block time must be greater than 0");
 
         L2_BLOCK_TIME = _l2BlockTime;
-
-        initialize(_startingBlockNumber, _startingTimestamp);
-    }
-
-    function initialize(uint256 _startingBlockNumber, uint256 _startingTimestamp) public initializer {
-        require(
-            _startingTimestamp <= block.timestamp,
-            "L2OutputOracle: starting L2 timestamp must be less than current time"
-        );
 
         startingTimestamp = _startingTimestamp;
         startingBlockNumber = _startingBlockNumber;
